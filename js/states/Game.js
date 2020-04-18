@@ -46,13 +46,25 @@ Game.prototype = { //propiedad del objecto Game (propio de JS )
         this.platerActions = {left:false,right:false,up:false};
     },
     update:function(){
-
+        if (this.lives==0) {
+            this.state.start('GameOver');
+        }
 
         this.elapseTime += this.time.elapsed;
         if (this.elapseTime >= this.candyFrequency) {
             this.elapseTime= 0;
             this.createCandy();
         }
+
+        this.candys.forEachAlive(function(element){
+
+            if (element.y >= 650) {
+                element.kill() //inactiva el renderear para despues
+                this.lives-=1;
+                console.log(this.lives);
+            }
+        },this);
+
         if(this.physics.arcade.collide(this.player,this.candys)){
             this.score+=2;
         }
